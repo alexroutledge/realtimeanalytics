@@ -1,7 +1,7 @@
 realtimeanalytics
 =================
 
-This is a demo of a real time analytics service built using Backbone and Firebase.
+This is a demo of a real time analytics service built using Backbone and Firebase. This is intended to work in the following way:
 
 -4 separate services are created to track user visits, basket activity, wishlist activity and reviews.
 
