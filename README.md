@@ -12,3 +12,5 @@ This is a demo of a real time analytics service built using Backbone and Firebas
 -The user initiates a call to the API by selecting a location from the postcode autosuggest.
 
 -Every time the user initiates a call to the API, any JS templates are re-rendered and the user's location via Google Maps.
+
+You can view a demo at http://dl.dropboxusercontent.com/u/8767938/fresca/html5/ga/demo/firebase-analytics-backbone.html
