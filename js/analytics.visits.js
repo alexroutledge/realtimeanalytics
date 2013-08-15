@@ -155,7 +155,6 @@ $(function(){
         _this.showMap('Visits');
         _this.renderGraph();
       });
-
     },
 
     addOne: function(model) {
