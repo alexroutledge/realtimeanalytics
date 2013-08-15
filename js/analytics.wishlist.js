@@ -114,27 +114,38 @@ $(function(){
     });
     },
     render: function(type) {
-      var view = new Wishlist.UserCount.View({
-        el: $('[data-wishlist-count]')[0],
-        model: {count: (new Wishlist.Collection).length}
+      var _this = this;
+      var $deferredCollection = [
+        function() {
+          var view = new Wishlist.UserCount.View({
+            el: $('[data-wishlist-count]')[0],
+            model: {count: (new Wishlist.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Wishlist.Current.View({
+            el: $('[data-wishlist-current]')[0],
+            model: {count: (new Wishlist.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Wishlist.DisplayItem.View({
+            el: $('[data-wishlist-list]')[0],
+            model: (new Wishlist.Collection)
+          });
+          view.render();
+        }(),
+      ];
+      $.when.apply($, $deferredCollection).done(function() {
+        localStorage.setItem('wishlist', (new Wishlist.Collection).length);
+        _this.showMap('Wishlist');
+        _this.renderGraph();
       });
-      view.render();
 
-      var view = new Wishlist.Current.View({
-        el: $('[data-wishlist-current]')[0],
-        model: {count: (new Wishlist.Collection).length}
-      });
-      view.render();
-
-      var view = new Wishlist.DisplayItem.View({
-        el: $('[data-wishlist-list]')[0],
-        model: (new Wishlist.Collection)
-      });
-      view.render();
-      localStorage.setItem('wishlist', (new Wishlist.Collection).length);
-      this.showMap('Wishlist');
-      this.renderGraph();
     },
+
 
     addOne: function(todo) {
       var view = new Wishlist.Activity.View({
