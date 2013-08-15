@@ -114,26 +114,36 @@ $(function(){
     });
     },
     render: function(type) {
-      var view = new Reviews.UserCount.View({
-        el: $('[data-reviews-count]')[0],
-        model: {count: (new Reviews.Collection).length}
+      var _this = this;
+      var $deferredCollection = [
+        function() {
+          var view = new Reviews.UserCount.View({
+            el: $('[data-reviews-count]')[0],
+            model: {count: (new Reviews.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Reviews.Current.View({
+            el: $('[data-reviews-current]')[0],
+            model: {count: (new Reviews.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Reviews.DisplayItem.View({
+            el: $('[data-reviews-list]')[0],
+            model: (new Reviews.Collection)
+          });
+          view.render();
+        }(),
+      ];
+      $.when.apply($, $deferredCollection).done(function() {
+        localStorage.setItem('reviews', (new Reviews.Collection).length);
+        _this.showMap('Reviews');
+        _this.renderGraph();
       });
-      view.render();
 
-      var view = new Reviews.Current.View({
-        el: $('[data-reviews-current]')[0],
-        model: {count: (new Reviews.Collection).length}
-      });
-      view.render();
-
-      var view = new Reviews.DisplayItem.View({
-        el: $('[data-reviews-list]')[0],
-        model: (new Reviews.Collection)
-      });
-      view.render();
-      localStorage.setItem('reviews', (new Reviews.Collection).length);
-      this.showMap('Reviews');
-      this.renderGraph();
     },
 
     addOne: function(todo) {
