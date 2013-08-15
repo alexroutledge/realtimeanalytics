@@ -113,26 +113,35 @@ $(function(){
     });
     },
     render: function(type) {
-      var view = new Basket.UserCount.View({
-        el: $('[data-basket-count]')[0],
-        model: {count: (new Basket.Collection).length}
+      var _this = this;
+      var $deferredCollection = [
+        function() {
+          var view = new Basket.UserCount.View({
+            el: $('[data-basket-count]')[0],
+            model: {count: (new Basket.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Basket.Current.View({
+            el: $('[data-basket-current]')[0],
+            model: {count: (new Basket.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Basket.DisplayItem.View({
+            el: $('[data-basket-list]')[0],
+            model: (new Basket.Collection)
+          });
+          view.render();
+        }(),
+      ];
+      $.when.apply($, $deferredCollection).done(function() {
+        localStorage.setItem('basket', (new Basket.Collection).length);
+        _this.showMap('Basket');
+        _this.renderGraph();
       });
-      view.render();
-
-      var view = new Basket.Current.View({
-        el: $('[data-basket-current]')[0],
-        model: {count: (new Basket.Collection).length}
-      });
-      view.render();
-
-      var view = new Basket.DisplayItem.View({
-        el: $('[data-basket-list]')[0],
-        model: (new Basket.Collection)
-      });
-      view.render();
-      localStorage.setItem('basket', (new Basket.Collection).length);
-      this.showMap('Basket');
-      this.renderGraph();
 
     },
 
