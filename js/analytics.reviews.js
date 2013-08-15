@@ -78,6 +78,41 @@ $(function(){
       createMarkers();
     },
 
+    renderGraph: function (type) {
+    var count = {
+        visits: parseFloat(localStorage.getItem('visits') || 0),
+        basket: parseFloat(localStorage.getItem('basket') || 0),
+        wishlist: parseFloat(localStorage.getItem('wishlist') || 0),
+        reviews: parseFloat(localStorage.getItem('reviews') || 0)
+    };
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Website activity'
+        },
+        xAxis: {
+            categories: ['Number of active visitors']
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Visits',
+            data: [count.visits]
+        }, {
+            name: 'Basket adds',
+            data: [count.basket]
+        }, {
+            name: 'Wishlist adds',
+            data: [count.wishlist]
+        }, {
+            name: 'Reviews posted',
+            data: [count.reviews]
+        }]
+    });
+    },
     render: function(type) {
       var view = new Reviews.UserCount.View({
         el: $('[data-reviews-count]')[0],
@@ -96,7 +131,9 @@ $(function(){
         model: (new Reviews.Collection)
       });
       view.render();
+      localStorage.setItem('reviews', (new Reviews.Collection).length);
       this.showMap('Reviews');
+      this.renderGraph();
     },
 
     addOne: function(todo) {
