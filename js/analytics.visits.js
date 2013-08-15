@@ -126,26 +126,36 @@ $(function(){
     });
     },
     render: function(type) {
-      var view = new Visits.UserCount.View({
-        el: $('[data-visits-count]')[0],
-        model: {count: (new Visits.Collection).length}
+      var _this = this;
+      var $deferredCollection = [
+        function() {
+          var view = new Visits.UserCount.View({
+            el: $('[data-visits-count]')[0],
+            model: {count: (new Visits.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Visits.Current.View({
+            el: $('[data-visits-current]')[0],
+            model: {count: (new Visits.Collection).length}
+          });
+          view.render();
+        }(),
+        function() {
+          var view = new Visits.DisplayItem.View({
+            el: $('[data-visits-list]')[0],
+            model: (new Visits.Collection)
+          });
+          view.render();
+        }(),
+      ];
+      $.when.apply($, $deferredCollection).done(function() {
+        localStorage.setItem('visits', (new Visits.Collection).length);
+        _this.showMap('Visits');
+        _this.renderGraph();
       });
-      view.render();
 
-      var view = new Visits.Current.View({
-        el: $('[data-visits-current]')[0],
-        model: {count: (new Visits.Collection).length}
-      });
-      view.render();
-
-      var view = new Visits.DisplayItem.View({
-        el: $('[data-visits-list]')[0],
-        model: (new Visits.Collection)
-      });
-      view.render();
-      localStorage.setItem('visits', (new Visits.Collection).length);
-      this.showMap('Visits');
-      this.renderGraph();
     },
 
     addOne: function(model) {
